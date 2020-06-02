@@ -50,22 +50,22 @@
           <span class="bom-count font-weight-bold">{{
             isGamePlay ? bombLeft : "??"
           }}</span>
-          Bomb(s) left
+          Punch(es) needed
         </div>
         <div class="px-5">
           <button
             type="button"
             class="btn btn-danger btn-sm btn-block mb-3"
             :disabled="!isGamePlay || !isMyTurn"
-            @click="explode()"
+            @click="punch()"
           >
             <template v-if="availableParticipant.length <= 1">
               Waiting for Others
             </template>
             <template v-else-if="!isGamePlay">
-              Get Ready
+              Please Set Ready
             </template>
-            <template v-else> Explode ({{ explodeLeft }} left) </template>
+            <template v-else> Punch Bomb ({{ punchLeft }} left) </template>
           </button>
           <button
             type="button"
@@ -77,10 +77,10 @@
               Waiting for Others
             </template>
             <template v-else-if="!isGamePlay">
-              Get Ready
+              Please Set Ready
             </template>
             <template v-else>
-              Throw <span v-if="!canThrow">(explode to enable)</span>
+              Throw <span v-if="!canThrow">(punch to enable)</span>
             </template>
           </button>
         </div>
@@ -200,7 +200,7 @@ export default {
   data () {
     return {
       timer: 0,
-      explodeLeft: 0,
+      punchLeft: 0,
       isGameFinish: false
     }
   },
@@ -229,11 +229,11 @@ export default {
     bombCount () {
       return this.$store.state.bombCount
     },
-    explodeCount () {
-      return this.$store.state.explodeCount
+    punchCount () {
+      return this.$store.state.punchCount
     },
     bombLeft () {
-      return this.bombCount - this.explodeCount
+      return this.bombCount - this.punchCount
     },
     canThrow: {
       get () {
@@ -323,7 +323,7 @@ export default {
           this.$socket.sendObj({
             lose: true
           })
-        } else if (this.explodeLeft <= 0) {
+        } else if (this.punchLeft <= 0) {
           this.nextTurn()
         }
       }
@@ -337,7 +337,7 @@ export default {
     init () {
       this.isGamePlay = false
       this.timer = 5
-      this.explodeLeft = 3
+      this.punchLeft = 3
 
       this.nextTurn()
     },
@@ -346,12 +346,12 @@ export default {
         ready: !val
       })
     },
-    explode () {
+    punch () {
       this.canThrow = true
-      this.explodeLeft -= 1
+      this.punchLeft -= 1
 
       this.$socket.sendObj({
-        explode: true
+        punch: true
       })
     },
     nextTurn () {
@@ -376,7 +376,7 @@ export default {
       })
 
       this.canThrow = false
-      this.explodeLeft = 3
+      this.punchLeft = 3
     }
   }
 }

@@ -15,7 +15,7 @@ export default new Vuex.Store({
     participant: [],
     isGamePlay: false,
     bombCount: 0,
-    explodeCount: 0,
+    punchCount: 0,
     turnIndex: 999999999,
     canThrow: false
   },
@@ -52,7 +52,7 @@ export default new Vuex.Store({
       }
 
       if (message.code === 20003) {
-        state.explodeCount = message.explodeCount
+        state.punchCount = message.punchCount
       }
 
       if (message.code === 20004) {
@@ -62,7 +62,7 @@ export default new Vuex.Store({
       if (message.code === 20005) {
         state.turnIndex = message.index
         state.bombCount = message.bombCount
-        state.explodeCount = message.explodeCount
+        state.punchCount = message.punchCount
       }
     },
     SOCKET_RECONNECT () {
