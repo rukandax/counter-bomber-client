@@ -286,10 +286,6 @@ export default {
       deep: true
     },
     availableParticipant () {
-      if (this.availableParticipant <= 1) {
-        this.init()
-      }
-
       if (
         this.availableParticipant.length < this.participant.length &&
         this.availableParticipant.length <= 1
@@ -298,7 +294,7 @@ export default {
       }
     },
     availableParticipantReady () {
-      if (this.availableParticipantReady) {
+      if (this.availableParticipantReady && !this.isGameFinish) {
         const timer = () =>
           setTimeout(() => {
             if (this.timer > 0) {
@@ -335,6 +331,8 @@ export default {
       this.isGamePlay = false
       this.timer = 5
       this.explodeLeft = 3
+
+      this.nextTurn()
     },
     toggleReady (val) {
       this.$socket.sendObj({

@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-
 export default new Vuex.Store({
   state: {
     socket: {
@@ -17,7 +16,7 @@ export default new Vuex.Store({
     isGamePlay: false,
     bombCount: 0,
     explodeCount: 0,
-    turnIndex: 0,
+    turnIndex: 999999999,
     canThrow: false
   },
   mutations: {
