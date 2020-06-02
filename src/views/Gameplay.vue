@@ -38,7 +38,7 @@
     </div>
 
     <div class="row m-0 mb-3">
-      <div class="col-6 px-0">
+      <div class="col-4 px-0">
         <div class="text-center mb-3">
           <span class="bom-count font-weight-bold">{{
             isGamePlay ? bombLeft : "??"
@@ -58,7 +58,7 @@
             <template v-else-if="!isGamePlay">
               Please Set Ready
             </template>
-            <template v-else> Punch Bomb ({{ punchLeft }} left) </template>
+            <template v-else> &gt;&gt; Punch Bomb ({{ punchLeft }} left) &lt;&lt;</template>
           </button>
           <button
             type="button"
@@ -73,12 +73,23 @@
               Please Set Ready
             </template>
             <template v-else>
-              Throw <span v-if="!canThrow">(punch to enable)</span>
+              &gt;&gt; Throw <span v-if="!canThrow">(1 Punch to Enable)</span> &lt;&lt;
             </template>
           </button>
         </div>
       </div>
-      <div class="col-6 p-4 bg-info text-white font-weight-bold">
+      <div class="col-4 px-4 text-center">
+        <div class="text-center mb-3">
+          <span class="bom-count font-weight-bold">
+            {{ isGamePlay ? bombTimer : "??" }}
+          </span>
+          Second(s) before explode
+        </div>
+        <div class="alert alert-success" role="alert">
+          The rules is very simple, if the bomb explode on your turn, you lose
+        </div>
+      </div>
+      <div class="col-4 p-4 bg-info text-white font-weight-bold">
         <div class="mb-2">Your Name : {{ username }}</div>
         <div class="mb-2">Game Room : {{ room }}</div>
         <div class="form-group">
@@ -150,7 +161,7 @@
               Waiting for Others
             </template>
             <template v-else>
-              {{ user.isReady ? "Set Not Ready" : "Set Ready" }}
+              {{ user.isReady ? "Set Not Ready" : "&gt;&gt; Set Ready &lt;&lt;" }}
             </template>
           </button>
 
@@ -193,6 +204,7 @@ export default {
   data () {
     return {
       timer: 0,
+      bombTimer: 0,
       punchLeft: 0,
       isGameFinish: false
     }
@@ -302,6 +314,20 @@ export default {
         this.availableParticipantReady &&
         !this.isGameFinish
       ) {
+        const bombTimer = () =>
+          setTimeout(() => {
+            if (this.bombTimer > 0) {
+              this.bombTimer -= 1
+              bombTimer()
+
+              if (this.bombTimer <= 0 && this.isMyTurn) {
+                this.$socket.sendObj({
+                  lose: true
+                })
+              }
+            }
+          }, 1000)
+
         const timer = () =>
           setTimeout(() => {
             if (this.timer > 0) {
@@ -310,6 +336,8 @@ export default {
 
               if (this.timer <= 0) {
                 this.isGamePlay = true
+                this.bombTimer = (this.bombCount * 2) + (this.bombCount / 2)
+                bombTimer()
               }
             }
           }, 1000)
