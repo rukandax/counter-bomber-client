@@ -20,16 +20,9 @@
         "
         alt=""
       />
-      <h1 class="font-weight-bold mb-4">
+      <h1 class="font-weight-bold">
         The Winner - {{ availableParticipant[0].username }}
       </h1>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="$router.push({ name: 'Join' })"
-      >
-        Play Again
-      </button>
     </div>
 
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -224,7 +217,10 @@ export default {
       return this.participant.filter(val => !val.lose)
     },
     availableParticipantReady () {
-      return this.availableParticipant.every(val => val.isReady)
+      return (
+        this.availableParticipant.length > 1 &&
+        this.availableParticipant.every(val => val.isReady)
+      )
     },
     bombCount () {
       return this.$store.state.bombCount
@@ -301,7 +297,11 @@ export default {
       }
     },
     availableParticipantReady () {
-      if (this.availableParticipantReady && !this.isGameFinish) {
+      if (
+        this.availableParticipant.length > 1 &&
+        this.availableParticipantReady &&
+        !this.isGameFinish
+      ) {
         const timer = () =>
           setTimeout(() => {
             if (this.timer > 0) {
