@@ -286,6 +286,10 @@ export default {
       deep: true
     },
     availableParticipant () {
+      if (this.availableParticipant <= 1) {
+        this.init()
+      }
+
       if (
         this.availableParticipant.length < this.participant.length &&
         this.availableParticipant.length <= 1
