@@ -89,7 +89,7 @@
               class="form-control"
               id="copy-link"
               :value="`https://madeby.rukanda.xyz/counter-bomber/?room=${room}`"
-              disabled
+              readonly
             />
             <div class="input-group-append">
               <button
