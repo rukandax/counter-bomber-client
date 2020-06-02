@@ -13,7 +13,7 @@ require('bootstrap/dist/js/bootstrap.min.js')
 
 Vue.config.productionTip = false
 
-Vue.use(VueNativeSock, 'ws://exalted-justice-266607.appspot.com', {
+Vue.use(VueNativeSock, 'wss://exalted-justice-266607.appspot.com', {
   store,
   format: 'json',
   reconnection: true,
