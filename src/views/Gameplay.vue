@@ -43,7 +43,7 @@
           <span class="bom-count font-weight-bold">{{
             isGamePlay ? bombLeft : "??"
           }}</span>
-          Punch(es) needed
+          Punch(es) before explode
         </div>
         <div class="px-5">
           <button
@@ -86,7 +86,7 @@
           Second(s) before explode
         </div>
         <div class="alert alert-success" role="alert">
-          The rules is very simple, if the bomb explode on your turn, you lose
+          The rules are very simple, if the bomb explodes on your turn, you lose
         </div>
       </div>
       <div class="col-4 p-4 bg-info text-white font-weight-bold">
@@ -336,7 +336,7 @@ export default {
 
               if (this.timer <= 0) {
                 this.isGamePlay = true
-                this.bombTimer = (this.bombCount * 2) + (this.bombCount / 2)
+                this.bombTimer = this.bombCount * 2
                 bombTimer()
               }
             }
