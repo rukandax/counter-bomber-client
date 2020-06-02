@@ -14,6 +14,7 @@ require('bootstrap/dist/js/bootstrap.min.js')
 Vue.config.productionTip = false
 
 Vue.use(VueNativeSock, 'wss://exalted-justice-266607.appspot.com', {
+  connectManually: true,
   store,
   format: 'json',
   reconnection: true,

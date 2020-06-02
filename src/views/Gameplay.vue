@@ -20,9 +20,16 @@
         "
         alt=""
       />
-      <h1 class="font-weight-bold">
+      <h1 class="font-weight-bold mb-4">
         The Winner - {{ availableParticipant[0].username }}
       </h1>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="$router.push({ name: 'Join' })"
+      >
+        Play Again
+      </button>
     </div>
 
     <div class="alert alert-warning alert-dismissible fade show" role="alert">

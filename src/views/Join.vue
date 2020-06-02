@@ -88,6 +88,9 @@ export default {
     if (this.$route.query.room) {
       this.room = this.$route.query.room
     }
+
+    this.$disconnect()
+    this.$connect()
   },
   methods: {
     joinRoom () {
