@@ -37,7 +37,7 @@
     </div>
 
     <div class="fixed-bottom pt-3 bg-white">
-      <div class="container">
+      <div class="container px-5">
         <button
           v-if="!isGamePlay"
           type="button"
@@ -92,9 +92,9 @@
         class="main-section col-xl-4 d-flex align-items-center col-lg-6 px-4 text-center bg-primary text-white justify-content-center"
       >
         <div class="text-center mb-3">
-          <span class="counter font-weight-bold">
+          <div class="counter font-weight-bold mb-2">
             {{ isGamePlay ? bombLeft : "??" }}
-          </span>
+          </div>
           Punch(es) before explode
         </div>
       </div>
@@ -102,9 +102,9 @@
         class="main-section col-xl-4 d-flex align-items-center col-lg-6 px-4 text-center bg-success text-white justify-content-center"
       >
         <div class="text-center mb-3">
-          <span class="counter font-weight-bold">{{
-            bombTimer ? bombTimer : "??"
-          }}</span>
+          <div class="counter font-weight-bold mb-2">
+            {{ bombTimer ? bombTimer : "??" }}
+          </div>
           Second(s) before explode
         </div>
       </div>
