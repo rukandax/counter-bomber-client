@@ -1,5 +1,5 @@
 <template>
-  <div class="container bg-white p-4 m-4">
+  <div class="bg-white p-4 m-4">
     <div
       :class="{ show: availableParticipantReady && !isGamePlay }"
       class="overlay position-absolute text-center"
@@ -18,7 +18,7 @@
         :src="
           `https://api.adorable.io/avatars/200/${availableParticipant[0].username}-${availableParticipant[0].color}`
         "
-        alt=""
+        alt
       />
       <h1 class="font-weight-bold">
         The Winner - {{ availableParticipant[0].username }}
@@ -37,59 +37,70 @@
       </button>
     </div>
 
-    <div class="row m-0 mb-3">
-      <div class="col-4 px-0">
-        <div class="text-center mb-3">
-          <span class="bom-count font-weight-bold">{{
-            isGamePlay ? bombLeft : "??"
-          }}</span>
-          Punch(es) before explode
-        </div>
-        <div class="px-5">
+    <div class="fixed-bottom pt-3 bg-white">
+      <div class="container">
+        <template v-if="!isGamePlay">
+          <button
+            type="button"
+            class="btn btn-sm btn-block mb-3"
+            :class="!isMyUserReady ? 'btn-primary' : 'btn-danger'"
+            @click="toggleReady(isMyUserReady)"
+          >
+            <template v-if="availableParticipant.length <= 1"
+              >Waiting for Others</template
+            >
+            <template v-else>
+              {{
+                isMyUserReady ? "Set Not Ready" : "&gt;&gt; Set Ready &lt;&lt;"
+              }}
+            </template>
+          </button>
+        </template>
+
+        <template v-else>
           <button
             type="button"
             class="btn btn-danger btn-sm btn-block mb-3"
-            :disabled="!isGamePlay || !isMyTurn"
+            :disabled="!isMyTurn"
             @click="punch()"
           >
-            <template v-if="availableParticipant.length <= 1">
-              Waiting for Others
-            </template>
-            <template v-else-if="!isGamePlay">
-              Please Set Ready
-            </template>
-            <template v-else> &gt;&gt; Punch Bomb ({{ punchLeft }} left) &lt;&lt;</template>
+            &gt;&gt; Punch Bomb ({{ punchLeft }} left) &lt;&lt;
           </button>
           <button
             type="button"
             class="btn btn-warning btn-sm btn-block mb-3"
-            :disabled="!isGamePlay || !isMyTurn || !canThrow"
+            :disabled="!isMyTurn || !canThrow"
             @click="nextTurn"
           >
-            <template v-if="availableParticipant.length <= 1">
-              Waiting for Others
-            </template>
-            <template v-else-if="!isGamePlay">
-              Please Set Ready
-            </template>
-            <template v-else>
-              &gt;&gt; Throw <span v-if="!canThrow">(1 Punch to Enable)</span> &lt;&lt;
-            </template>
+            &gt;&gt; Throw
+            <span v-if="!canThrow">(1 Punch to Enable)</span> &lt;&lt;
           </button>
+        </template>
+      </div>
+    </div>
+
+    <div class="row m-0 mb-3">
+      <div
+        class="main-section col-xl-4 d-flex align-items-center col-lg-6 px-4 text-center bg-primary text-white justify-content-center"
+      >
+        <div class="text-center mb-3">
+          <span class="counter font-weight-bold">
+            {{ isGamePlay ? bombLeft : "??" }}
+          </span>
+          Punch(es) before explode
         </div>
       </div>
-      <div class="col-4 px-4 text-center">
+      <div
+        class="main-section col-xl-4 d-flex align-items-center col-lg-6 px-4 text-center bg-success text-white justify-content-center"
+      >
         <div class="text-center mb-3">
-          <span class="bom-count font-weight-bold">
-            {{ isGamePlay ? bombTimer : "??" }}
-          </span>
+          <span class="counter font-weight-bold">{{
+            bombTimer ? bombTimer : "??"
+          }}</span>
           Second(s) before explode
         </div>
-        <div class="alert alert-success" role="alert">
-          The rules are very simple, if the bomb explodes on your turn, you lose
-        </div>
       </div>
-      <div class="col-4 p-4 bg-info text-white font-weight-bold">
+      <div class="col-xl-4 col-lg-12 p-4 bg-info text-white font-weight-bold">
         <div class="mb-2">Your Name : {{ username }}</div>
         <div class="mb-2">Game Room : {{ room }}</div>
         <div class="form-group">
@@ -120,7 +131,7 @@
       <div
         v-for="(user, userIndex) in participant"
         :key="`username-${user.username}`"
-        class="text-center col-6 col-lg-4 px-0 border participant"
+        class="text-center col-md-6 col-xl-4 px-0 border participant"
       >
         <div
           class="h-25px display-block border-bottom"
@@ -133,45 +144,20 @@
             "
           />
         </div>
-        <div class="h5 mb-3">
-          {{ user.username }}
-        </div>
+        <div class="h5 mb-3">{{ user.username }}</div>
 
         <template v-if="user.lose">
-          <button type="button" class="btn btn-danger btn-sm" disabled>
+          <button type="button" class="btn btn-danger btn-sm">
             Loser
           </button>
         </template>
 
         <template v-else-if="!isGamePlay">
-          <button
-            v-if="user.username === username"
-            @click="toggleReady(user.isReady)"
-            type="button"
-            class="btn btn-sm"
-            :class="{
-              'btn-primary': !user.isReady,
-              'btn-danger': user.isReady
-            }"
-            :disabled="
-              availableParticipant.length <= 1 || availableParticipantReady
-            "
-          >
-            <template v-if="availableParticipant.length <= 1">
-              Waiting for Others
-            </template>
-            <template v-else>
-              {{ user.isReady ? "Set Not Ready" : "&gt;&gt; Set Ready &lt;&lt;" }}
-            </template>
-          </button>
-
-          <button
-            v-else-if="user.isReady"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            disabled
-          >
+          <button v-if="user.isReady" type="button" class="btn btn-dark btn-sm">
             User Ready
+          </button>
+          <button v-else type="button" class="btn btn-secondary btn-sm">
+            User Is Not Ready
           </button>
         </template>
 
@@ -180,7 +166,6 @@
             v-if="userIndex === turnIndex"
             type="button"
             class="btn btn-success btn-sm"
-            disabled
           >
             {{
               user.username === username
@@ -205,6 +190,7 @@ export default {
     return {
       timer: 0,
       bombTimer: 0,
+      bombInterval: null,
       punchLeft: 0,
       isGameFinish: false
     }
@@ -273,9 +259,43 @@ export default {
       })
 
       return this.turnIndex === userIndex && this.isGamePlay
+    },
+    isMyUserReady () {
+      const user = this.participant.find(val => {
+        return val.username === this.username
+      })
+
+      return user.isReady || false
     }
   },
   watch: {
+    isMyTurn: {
+      handler () {
+        clearInterval(this.bombInterval)
+        this.bombTimer = 0
+
+        if (this.isMyTurn) {
+          this.bombTimer = 10
+
+          this.bombInterval = setInterval(() => {
+            if (this.bombTimer > 0) {
+              this.bombTimer -= 1
+
+              if (this.bombTimer <= 0) {
+                clearInterval(this.bombInterval)
+
+                if (this.isMyTurn) {
+                  this.$socket.sendObj({
+                    lose: true
+                  })
+                }
+              }
+            }
+          }, 1000)
+        }
+      },
+      immediate: true
+    },
     isConnected: {
       handler () {
         if (!this.isConnected) {
@@ -314,35 +334,16 @@ export default {
         this.availableParticipantReady &&
         !this.isGameFinish
       ) {
-        const bombTimer = () =>
-          setTimeout(() => {
-            if (this.bombTimer > 0) {
-              this.bombTimer -= 1
-              bombTimer()
+        const timer = setInterval(() => {
+          if (this.timer > 0) {
+            this.timer -= 1
 
-              if (this.bombTimer <= 0 && this.isMyTurn) {
-                this.$socket.sendObj({
-                  lose: true
-                })
-              }
+            if (this.timer <= 0) {
+              clearInterval(timer)
+              this.isGamePlay = true
             }
-          }, 1000)
-
-        const timer = () =>
-          setTimeout(() => {
-            if (this.timer > 0) {
-              this.timer -= 1
-              timer()
-
-              if (this.timer <= 0) {
-                this.isGamePlay = true
-                this.bombTimer = this.bombCount * 2
-                bombTimer()
-              }
-            }
-          }, 1000)
-
-        timer()
+          }
+        }, 1000)
       }
     },
     bombLeft () {
@@ -392,7 +393,10 @@ export default {
 
       this.turnIndex = index
 
-      if (this.participant[this.turnIndex].lose) {
+      if (
+        this.participant.length > 0 &&
+        this.participant[this.turnIndex].lose
+      ) {
         this.nextTurn()
         return
       }
@@ -411,6 +415,10 @@ export default {
 </script>
 
 <style lang="scss">
+.main-section {
+  min-height: 150px;
+}
+
 .h-25px {
   height: 25px;
 }
@@ -441,7 +449,7 @@ export default {
   height: 240px;
 }
 
-.bom-count {
+.counter {
   font-size: 50px;
 }
 </style>
