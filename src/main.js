@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueNativeSock from 'vue-native-websocket'
 import VueMeta from 'vue-meta'
+import VueCookies from 'vue-cookies'
 
 import App from './App.vue'
 import router from './router'
@@ -22,6 +23,7 @@ Vue.use(VueNativeSock, 'ws://localhost:6969', {
 })
 
 Vue.use(VueMeta)
+Vue.use(VueCookies)
 
 new Vue({
   router,

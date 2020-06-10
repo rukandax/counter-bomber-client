@@ -85,6 +85,10 @@ export default {
     }
   },
   mounted () {
+    if (this.$cookies.get('username')) {
+      this.username = this.$cookies.get('username')
+    }
+
     if (this.$route.query.room) {
       this.room = this.$route.query.room
     }
@@ -94,6 +98,8 @@ export default {
   },
   methods: {
     joinRoom () {
+      this.$cookies.set('username', this.username)
+
       this.$socket.sendObj({
         join: {
           username: this.username,

@@ -1,17 +1,16 @@
 <template>
-  <div class="bg-white p-4 m-4">
+  <div v-if="isConnected" class="bg-white p-4 m-4">
     <div
       :class="{ show: availableParticipantReady && !isGamePlay }"
-      class="overlay position-absolute text-center"
+      class="overlay position-fixed text-center"
     >
       <h1>Game will start in...</h1>
       <h1 class="font-weight-bold">{{ timer }}</h1>
     </div>
 
     <div
-      v-if="availableParticipant.length"
       :class="{ show: isGameFinish }"
-      class="overlay position-absolute text-center"
+      class="overlay position-fixed text-center"
     >
       <img
         class="mb-5"
@@ -39,23 +38,32 @@
 
     <div class="fixed-bottom pt-3 bg-white">
       <div class="container">
-        <template v-if="!isGamePlay">
-          <button
-            type="button"
-            class="btn btn-sm btn-block mb-3"
-            :class="!isMyUserReady ? 'btn-primary' : 'btn-danger'"
-            @click="toggleReady(isMyUserReady)"
+        <button
+          v-if="!isGamePlay"
+          type="button"
+          class="btn btn-sm btn-block mb-3"
+          :class="!isMyUserReady ? 'btn-primary' : 'btn-danger'"
+          :disabled="availableParticipant.length <= 1"
+          @click="toggleReady(isMyUserReady)"
+        >
+          <template v-if="availableParticipant.length <= 1"
+            >Waiting for Others</template
           >
-            <template v-if="availableParticipant.length <= 1"
-              >Waiting for Others</template
-            >
-            <template v-else>
-              {{
-                isMyUserReady ? "Set Not Ready" : "&gt;&gt; Set Ready &lt;&lt;"
-              }}
-            </template>
-          </button>
-        </template>
+          <template v-else>
+            {{
+              isMyUserReady ? "Set Not Ready" : "&gt;&gt; Set Ready &lt;&lt;"
+            }}
+          </template>
+        </button>
+
+        <button
+          v-else-if="!isMyTurn"
+          type="button"
+          class="btn btn-secondary btn-sm btn-block mb-3"
+          disabled
+        >
+          Waiting for Your Turn
+        </button>
 
         <template v-else>
           <button
