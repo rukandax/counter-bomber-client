@@ -4,8 +4,8 @@
       :class="{ show: availableParticipantReady && !isGamePlay }"
       class="overlay position-fixed text-center"
     >
-      <h1>Game will start in...</h1>
-      <h1 class="font-weight-bold">{{ timer }}</h1>
+      <h2>Game will start in...</h2>
+      <h2 class="font-weight-bold px-3">{{ timer }}</h2>
     </div>
 
     <div
@@ -19,9 +19,10 @@
         "
         alt
       />
-      <h1 class="font-weight-bold">
-        The Winner - {{ availableParticipant[0].username }}
-      </h1>
+      <h2>The Winner</h2>
+      <h2 class="font-weight-bold px-3">
+        {{ availableParticipant[0].username }}
+      </h2>
     </div>
 
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -448,7 +449,7 @@ export default {
     flex-wrap: wrap;
   }
 
-  h1 {
+  h2 {
     width: 100%;
   }
 }
